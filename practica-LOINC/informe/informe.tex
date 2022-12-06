@@ -1,0 +1,30 @@
+\documentclass[a4paper,12pt]{article} 
+% Paquetes......................................................................
+\usepackage{amsmath, amssymb, amsfonts, latexsym}
+\usepackage[utf8]{inputenc}
+
+
+\textheight = 24 cm
+\textwidth = 17 cm
+
+%\renewcommand{\arraystretch}{1.25}
+
+% INICIO DEL DOCUMENTO --------------------------------------------------------
+\begin{document}
+	
+	\setlength{\parindent}{0.5cm}
+	\setlength{\voffset}{-2cm}
+	\setlength{\hoffset}{-2cm}
+	
+	\input{./include/portada.tex}
+	
+	\tableofcontents
+	\newpage
+	
+	
+	\newpage
+	\bibliography{./include/references}
+	\bibliographystyle{IEEEtran}
+	
+	
+\end{document}

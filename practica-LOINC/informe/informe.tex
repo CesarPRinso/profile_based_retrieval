@@ -2,6 +2,9 @@
 % Paquetes......................................................................
 \usepackage{amsmath, amssymb, amsfonts, latexsym}
 \usepackage[utf8]{inputenc}
+\usepackage{palatino}
+\usepackage{pdfpages}
+\usepackage{float} % para que las figuras no floten
 
 \renewcommand{\contentsname}{Contenidos}
 
@@ -19,25 +22,45 @@
 	
 	\input{./include/portada.tex}
 	
-	\tableofcontents
-	\newpage
+	%\tableofcontents
+
 	
 	\section{Introducción}
+	Tradicionalmente, algoritmos como el BM25 usados para realizar motores de búsqueda clasifican los resultados obtenidos para cada consulta en "relevantes" e "irrelevantes". Esta clasificación no caracteriza de manera completamente correcta las opiniones de los usuarios, ya que hay resultados más relevantes que otros, de manera que se puede establecer un orden prácticamente total de la relevancia óptima de los resultados. 
 	
+	Obtener este ranking sin tener un feedback explícito no es trivial, y conseguir estos comentarios por parte de los usuarios es difícil. La información sobre a qué entradas de la búsqueda acceden los usuarios nos puede proporcionar información equivalente, de manera mucho menos costosa. El principal inconveniente de utilizar el conocido como "clickthrough data", datos sobre los clicks de los usuarios, es la cantidad de ruido presente en los datos y la dependencia que existe entre los clicks de los usuarios y el orden de los documentos recibidos.
 	
-	 \cite{articulo-clase}
+	Sin duda este tipo de datos son útiles y poco costosos de conseguir, pero su calidad no se puede comparar con aquella de los juicios de relevancia generados por expertos del dominio.\\
 	
-	\section{Desarrollo de la solución}
+	En este trabajo, se nos pide implementar los algoritmos descritos en el artículo \cite{articulo-clase} sobre un set de tres búsquedas sobre la terminología LOINC.
+	
+	LOINC (Logical Observation Identifiers, Names and Codes)\cite{loinc} es una terminología de términos de laboratorio, donde cada concepto viene definido por el componente medido (component), el sistema sobre el que se observa (system), la propiedad observada (property) y su nombre (long common name), este último agrupando las otras tres características del término.
+	
+	\section{Desarrollo del buscador}
+	Utilizando el lenguaje python, se ha adaptado el dataset proporcionado a las necesidades del proyecto, y se ha preparado una implementación de un buscador basado en el algoritmo BM25, optimizado mediante los clicks de los usuarios.
 	
 	\subsection{Procesado de datos}
+	
+	En el dataset se proporcionaron tres búsquedas sobre LOINC, de las cuales cada consulta tenía una lista de posibles respuestas.
+	Para cada una de las consultas se obtuvo un dataset como el siguiente:
+	
+	 \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=\textwidth]{include/query_example_orig.png}
+	 	\caption{Ejemplo del dataset recibido para la consulta "GLUCOSE IN BLOOD"}
+	 \end{figure}
+	
+	Los autores de este trabajo seleccionaron, actuando como usuarios, a cuáles de los códigos harían click según la descripción textual de la búsqueda. De esta manera, se pudo generar ... 
+	
+	
 	
 	\subsection{Testing y resultados}
 	
 	\section{Conclusiones}
 	
-	
-	\section*{Bibliografía}
-	\addcontentsline{toc}{section}{Bibliografía}
+
+	%\section*{Bibliografía}
+	%\addcontentsline{toc}{section}{Bibliografía}
 	\bibliography{include/references}
 	\bibliographystyle{IEEEtran}
 	

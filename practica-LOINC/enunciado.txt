@@ -1,0 +1,5 @@
+1.Choose a type of MLR approach
+
+2.Build the appropiate training set for the given queries: “glucose in blood”, “bilirubin in plasma”, “White blood cells count”
+
+3. Submit a .zip file with training datasets 

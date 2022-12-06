@@ -3,6 +3,7 @@
 \usepackage{amsmath, amssymb, amsfonts, latexsym}
 \usepackage[utf8]{inputenc}
 
+\renewcommand{\contentsname}{Contenidos}
 
 \textheight = 24 cm
 \textwidth = 17 cm
@@ -21,9 +22,23 @@
 	\tableofcontents
 	\newpage
 	
+	\section{Introducción}
 	
-	\newpage
-	\bibliography{./include/references}
+	
+	 \cite{articulo-clase}
+	
+	\section{Desarrollo de la solución}
+	
+	\subsection{Procesado de datos}
+	
+	\subsection{Testing y resultados}
+	
+	\section{Conclusiones}
+	
+	
+	\section*{Bibliografía}
+	\addcontentsline{toc}{section}{Bibliografía}
+	\bibliography{include/references}
 	\bibliographystyle{IEEEtran}
 	
 	

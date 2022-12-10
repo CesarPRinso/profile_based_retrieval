@@ -28,38 +28,40 @@ def rank(df, query):
 
     names = df["long_common_name"].values.tolist()
     component = df["component"].values.tolist()
-    # system = df["system"].values.tolist()
+    system = df["system"].values.tolist()
     # property = df["property"].values.tolist()
 
     tokenized_name = [clean_string(doc).split(" ") for doc in names]
     tokenized_component = [clean_string(doc).split(" ") for doc in component]
-    # tokenized_system = [clean_string(doc).split(" ") for doc in system]
+    tokenized_system = [clean_string(doc).split(" ") for doc in system]
     # tokenized_property = [clean_string(doc).split(" ") for doc in property]
 
     bm25_name = BM25Okapi(tokenized_name)
     bm25_component = BM25Okapi(tokenized_component)
-    # bm25_system = BM25Okapi(tokenized_system)
+    bm25_system = BM25Okapi(tokenized_system)
     # bm25_property = BM25Okapi(tokenized_property)
 
     tokenized_query = query.split()
     names_scores = bm25_name.get_scores(tokenized_query)
     component_scores = bm25_component.get_scores(tokenized_query)
-    # system_scores = bm25_system.get_scores(tokenized_query)
+    system_scores = bm25_system.get_scores(tokenized_query)
     # property_scores = bm25_property.get_scores(tokenized_query)
 
     df["long_common_name"] = names_scores
     df["component"] = component_scores
+    df["system"] = system_scores
     df = df.sort_values(by=['long_common_name', 'component'], ascending=False)
     return df
 
 
-def build_learning_data_from(data_loinc):
-    df_rank = pd.DataFrame(columns=['long_common_name', 'component'])
-    dfprob = rank(data_loinc, "glucose in blood")
+def build_learning_data_from(data_loinc, query):
+    df_rank = pd.DataFrame(columns=['long_common_name', 'component', 'system'])
+    dfprob = rank(data_loinc, query)
     learning_data = dfprob.loc[:, :]
 
     scaler = StandardScaler()
     df_rank['index'] = range(1, len(learning_data) + 1)
     df_rank['long_common_name'] = scaler.fit_transform(learning_data[['long_common_name']])
     df_rank['component'] = scaler.fit_transform(learning_data[['component']])
+    df_rank['system'] = scaler.fit_transform(learning_data[['system']])
     return df_rank

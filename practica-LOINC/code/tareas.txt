@@ -3,6 +3,7 @@ TODO:
 - añadir system al datapreparation.py -> César 
 - iterar sobre las consultas en el main.py (genera csv) -> César
 - randomize antes de pintar la figura -> César
+- guardar salida de la búsqueda -> César
 - redactar memoria () -> Aída
 - hacer diapositivas -> Gabriel
 

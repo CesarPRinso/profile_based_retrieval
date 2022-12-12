@@ -11,22 +11,36 @@ y = []
 for t in csv.reader(open('text/y.csv', 'r')):
     y.append(t)
 y = np.asarray(y, 'd')
+print(y)
 
 with open("text/queries.txt") as archivo:
     for linea in archivo:
-        query = linea.replace('\n', "").replace("_", " ")
-        rank1 = pd.read_csv('loinc_dataset/' + linea.replace('\n', "") + '.csv', encoding="ISO-8859-1")
+        linea = linea.replace('\n', "")
+        #process queries
+        query = linea.replace("_", " ")
+        rank1 = pd.read_csv('loinc_dataset/' + linea + '.csv', encoding="ISO-8859-1")
         learning_data = build_learning_data_from(rank1, query)
-        learning_data.to_csv('out_' + linea.replace('\n', "") + '.csv')
+        
+        #save intermediate results
+        learning_data.to_csv('result/out_intermediate_' + linea + '.csv')
+        #separate dataset into train and test
         train = learning_data.iloc[:50, :]
         test = learning_data.iloc[50:, :]
+        
+        # apply rsvm and save results
         rsvm = r_train(train, y[:50, :])
         r = r_predict(rsvm, test)
+        print(r)
+        #r.to_csv('result/out_' + linea + '.csv', encoding="ISO-8859-1")
+
+        
         pl.scatter(r[:, 0], r[:, 1])
         pl.plot([0, len(r)], [r[4, 1], r[4, 1]], 'k--', lw=2)
-        pl.xlabel('CANDIDATE_ID')
-        pl.ylabel('SCORE')
-        pl.show()
+        pl.xlabel('entry')
+        pl.ylabel('score')
+        pl.savefig('result/'+ linea + '.png')
+        #pl.show()
+        pl.close()
 '''
 rank1 = pd.read_csv('loinc_dataset/glucose_in_blood.csv', encoding="ISO-8859-1")
 

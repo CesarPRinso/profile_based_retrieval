@@ -1,0 +1,26 @@
+Reading training examples...done
+Training set properties: 3 features, 3 rankings, 15 examples
+NOTE: Adjusted stopping criterion relative to maximum loss: eps=0.007000
+Iter 1: ...*(NumConst=1, SV=1, CEps=7.0000, QPEps=0.0000)
+Iter 2: ...*(NumConst=2, SV=2, CEps=13.8306, QPEps=0.0000)
+Iter 3: ...*(NumConst=3, SV=3, CEps=0.7829, QPEps=0.3428)
+Iter 4: ...*(NumConst=4, SV=2, CEps=0.1520, QPEps=0.0428)
+Iter 5: ...*(NumConst=5, SV=3, CEps=0.1061, QPEps=0.0349)
+Iter 6: ...*(NumConst=6, SV=4, CEps=0.0349, QPEps=0.0168)
+Iter 7: ...*(NumConst=7, SV=4, CEps=0.0084, QPEps=0.0041)
+Iter 8: ...(NumConst=7, SV=4, CEps=0.0020, QPEps=0.0041)
+Final epsilon on KKT-Conditions: 0.00406
+Upper bound on duality gap: 0.00850
+Dual objective value: dval=19.04851
+Primal objective value: pval=19.05702
+Total number of constraints in final working set: 7 (of 7)
+Number of iterations: 8
+Number of calls to 'find_most_violated_constraint': 24
+Number of SV: 4 
+Norm of weight vector: |w|=0.31508
+Value of slack variable (on working set): xi=6.33579
+Value of slack variable (global): xi=6.33579
+Norm of longest difference vector: ||Psi(x,y)-Psi(x,ybar)||=2.73855
+Runtime in cpu-seconds: 0.01
+Compacting linear model...done
+Writing learned model...done

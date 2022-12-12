@@ -1,101 +1,68 @@
-import numpy as np
 import csv
-
-from data_preparation import build_learning_data_from
-#from r_train import r_train
-#from r_predict import r_predict
+import os
 import pandas as pd
-import pylab as pl
+from data_preparation import build_learning_data_from
 
 def get_svm_format(x, qid):
+    """
+    Builds proper svm format for loinc codes with more than one click
+    """
+    
+    clicks = data['sum_clicks'][x]
+    if clicks == 0:
+        return ""
     long_common_name = data['long_common_name'][x]
     component = data['component'][x]
     system = data['system'][x]
-    clicks = data['sum_clicks'][x]
     return f"{clicks} qid:{qid} 1:{long_common_name} 2:{component} 3:{system}\n"
+
+if os.path.exists("result/train.dat"):
+    os.remove("result/train.dat")
+if os.path.exists("result/test.dat"):
+    os.remove("result/test.dat")
 
 with open("input/queries.txt") as f:
     query_list = f.read().split("\n")
 
 # For each of the queries
 for qid in range(len(query_list)):
+    # read input file
     query = query_list[qid]
     data = pd.read_csv(f"input/{query}.csv")
     query = query.replace("_"," ")
 
-    #Run data through BM25
+    # run data through BM25
     data = build_learning_data_from(data, query)
 
-    #generate learning data in correct format for SVMrank and save to .dat files
+    # generate learning data in correct format for SVMrank 
     data['svm_format'] = data['index'].apply(lambda x: get_svm_format(x-1, qid))
     
-    #separate into training and testing
+    # separate into training and testing and save dat files
+    train_dat = ""
     train = data.copy()
     train = train.iloc[:50, :]
+    for i in range(train.shape[0]):
+        train_dat += train['svm_format'][i]
+    with open("result/train.dat", "a") as f:
+        f.writelines(train_dat)
+    
+    test_dat = ""
     test = data.copy()
     test = test.iloc[50:, :]
-    
-    print(f"generated appropiate data for query: \"{query}\"\n")
+    for i in range(test.shape[0]):
+        test_dat += test['svm_format'][50+i]
+    with open("result/test.dat", "a") as f:
+        f.writelines(test_dat)
 
-    #save SVMrank format files
-    with open("result/intermediate/train.dat", "a") as f:
-        f.writelines(train['svm_format'].to_string(index=False))
+    print(f"generated appropiate data for query \"{query}\"")
     
 #generate the model with SVMrank
+command = "./aux_files/svm_rank_learn -c 3 result/train.dat result/model.dat > result/svm_learn_output.txt"
+os.system(command)
 
 #obtain search results with SVMrank for each query
+command = "./aux_files/svm_rank_classify result/test.dat result/model.dat result/prediction_order.txt > result/svm_rank_output.txt"
+os.system(command)
 
+# transform SVMrank results back to a human readable list
 
-
-    
-    
-"""
-for linea in archivo:
-    linea = linea.replace('\n', "")
-    #process queries
-    query = linea.replace("_", " ")
-    rank1 = pd.read_csv('loinc_dataset/' + linea + '.csv', encoding="ISO-8859-1")
-    learning_data = build_learning_data_from(rank1, query)
-       
-    #save intermediate results 
-    learning_data.to_csv('result/out_intermediate_' + linea + '.csv')
-    #separate dataset into train and test
-    train = learning_data.iloc[:50, :]
-    test = learning_data.iloc[50:, :]
-
-    #generate learning data in correct format for SVMrank
-        
-        
-    # apply rsvm and save results
-    rsvm = r_train(train, y[:50, :])
-    r = r_predict(rsvm, test)
-    print(r)
-    #r.to_csv('result/out_' + linea + '.csv', encoding="ISO-8859-1")
-
-        
-    pl.scatter(r[:, 0], r[:, 1])
-    pl.plot([0, len(r)], [r[4, 1], r[4, 1]], 'k--', lw=2)
-    pl.xlabel('entry')
-    pl.ylabel('score')
-    pl.savefig('result/'+ linea + '.png')
-    #pl.show()
-    pl.close()
-"""
-'''
-rank1 = pd.read_csv('loinc_dataset/glucose_in_blood.csv', encoding="ISO-8859-1")
-
-learning_data = build_learning_data_from(rank1, "glucose in blood")
-train = learning_data.iloc[:50, :]
-test = learning_data.iloc[50:, :]
-
-# train
-rsvm = r_train(train, y[:50, :])
-# rank
-r = r_predict(rsvm, test)
-
-pl.scatter(r[:, 0], r[:, 1])
-pl.plot([0, len(r)], [r[4, 1], r[4, 1]], 'k--', lw=2)
-pl.xlabel('CANDIDATE_ID')
-pl.ylabel('SCORE')
-pl.show()
-'''

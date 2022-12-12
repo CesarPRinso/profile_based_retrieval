@@ -42,20 +42,56 @@
 	\subsection{Procesado de datos}
 	
 	En el dataset se proporcionaron tres búsquedas sobre LOINC, de las cuales cada consulta tenía una lista de posibles respuestas.
-	Para cada una de las consultas se obtuvo un dataset como el de la Figura 1. 
+	Para cada una de las consultas se obtuvo un dataset como el de la Figura 1.
+	%, donde cada una de las columnas contiene información importante sobre cada una de las posibles salidas de la búsqueda.
 	
 	 \begin{figure}[H]
 	 	\centering
 	 	\includegraphics[width=\textwidth]{include/query_example_orig.png}
 	 	\caption{Ejemplo del dataset recibido para la consulta "GLUCOSE IN BLOOD"}
 	 \end{figure}
-	
+ 
 	Los autores de este trabajo seleccionaron, actuando como usuarios, a cuáles de los códigos harían click según la descripción textual de la búsqueda. De esta manera, se pudo generar un dataset con las tripletas habituales para este tipo de datos. Esta información se guardó en un segundo dataset, representando la consulta, el orden de respuestas presentadas y aquellas respuestas a las que se les hizo click, indicando el número de veces.
 	
+	Como se indica en el articulo \cite{articulo-clase}, la información relativa al clickthrough data se codifica como tripletas, donde cada búsqueda (query) se relaciona con los resultados obtenidos en un orden, y el número de clicks realizados sobre cada uno de ellos.\\
+	
+	El procesado de los datos de este problema se ve afectado por dos importantes decisiones de diseño: la elección del algoritmo de búsqueda y los campos utilizados para realizar la búsqueda.
+
+	Como algoritmo de búsqueda se utilizó el algoritmo BM25Okapi, por ser uno de los algoritmos base más robustos habitualmente utilizado en este campo. Para la implementación de la búsqueda se utilizó la librería \texttt{rank\_bm25} y su implementación del algoritmo.
+	
+	En segundo lugar, se decidió utilizar los campos \textit{long common name}, \textit{component} y \textit{system} como la base de este motor de búsqueda, ya que proporcionan información suficiente para poder realizar la búsqueda, y así eliminar la necesidad del campo \textit{component}, cuya información no se podía utilizar con las consultas propuestas.
+	
+	\subsection{Implementación}
+	
+	La implementación realizada se puede observar en la carpeta adjunta \texttt{code}, que contiene los ficheros de código necesarios, así como los ficheros de entrada del algoritmo en la carpeta \texttt{code/loinc\_dataset} y los resultados de la ejecución en la carpeta \texttt{code/result}.
+	
+	Para la implementación, la información se separó en dos dataset. El dataset \textit{train}, que contiene las primeras 50 filas, se utilizó para entrenar el algoritmo, mientras que el conjunto \textit{test} se utilizó para mejorar la búsqueda y así poder evaluar el algoritmo.
+	
+	La implementación realizada sigue el siguiente esquema
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{include/esquema_implementacion.png}
+		\caption{Esquema de la implementación}
+	\end{figure}
+	
+	Veamos como se aplica esta implementación a la query \textit{"glucose in blood"}, glucosa en sangre, sobre el dataset proporcionado. 
+	
+	En primer lugar, se aplica el algoritmo BM25 sobre la query a procesar, obteniendo una estructura de datos que representa la importancia relativa de cada uno de los atributos del código de LOINC respecto de la query.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{include/bm25rank_glucoseBlood.png}
+		\caption{Resultado de aplicar el algoritmo BM25.}
+	\end{figure}
+
+	A continuación, utilizando la transformada pairwise y el modelo SVC linear, convertimos nuestro problema de búsqueda en un problema de clasificación bidimensional, teniendo en cuenta los clicks de los usuarios y el resultado de la búsqueda anterior. 
+	
+	Por último, ordenamos los resultados del dataset \texttt{test}, y generamos unas gráficas que nos permitan visualizar los resultados.
+	
+	\subsection{Testeo y resultados}
 	
 	
-	
-	\subsection{Testing y resultados}
 	
 	\section{Conclusiones}
 	

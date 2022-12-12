@@ -51,7 +51,7 @@ def rank(df, query):
     df["component"] = component_scores
     df["system"] = system_scores
     df = df.sort_values(by=['long_common_name','system', 'component'], ascending=False)
-    print("[",query,"] BM25 rank:\n",df[['loinc_num', 'long_common_name', 'component', 'system','sum_clicks']])
+    #print("[",query,"] BM25 rank:\n",df[['loinc_num', 'long_common_name', 'component', 'system','sum_clicks']])
     return df
 
 
@@ -65,5 +65,6 @@ def build_learning_data_from(data_loinc, query):
     df_rank['long_common_name'] = scaler.fit_transform(learning_data[['long_common_name']])
     df_rank['component'] = scaler.fit_transform(learning_data[['component']])
     df_rank['system'] = scaler.fit_transform(learning_data[['system']])
-    print("[",query,"] scaled rank:\n",df_rank)
+    df_rank['sum_clicks'] = learning_data['sum_clicks']
+    #print("[",query,"] scaled rank:\n",df_rank)
     return df_rank

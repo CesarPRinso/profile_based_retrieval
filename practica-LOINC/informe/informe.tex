@@ -85,6 +85,8 @@
 		\caption{Resultado de aplicar el algoritmo BM25.}
 	\end{figure}
 
+	Cabe destacar que con el algoritmo BM25, la importancia de los contenidos del system se marca como 0 en todos los casos. Esto se debe a que este campo contiene abreviaturas, representando la palabra \textit{blood} como \textit{Bld}, por lo que una búsqueda por palabra exacta no obtiene ningún resultado.
+
 	A continuación, utilizando la transformada pairwise y el modelo SVC linear, convertimos nuestro problema de búsqueda en un problema de clasificación bidimensional, teniendo en cuenta los clicks de los usuarios y el resultado de la búsqueda anterior. 
 	
 	Por último, ordenamos los resultados del dataset \texttt{test}, y generamos unas gráficas que nos permitan visualizar los resultados.

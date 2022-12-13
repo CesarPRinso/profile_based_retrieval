@@ -1,0 +1,2 @@
+query "glucose in blood": 933-2	Blood product type	Blood product type	^BPU	Type
+query "glucose in blood": 35184-1	Fasting glucose [Mass or Moles/volume] in Serum or Plasma	Glucose^post CFst	Ser/Plas	MSCnc

@@ -73,37 +73,31 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.6\textwidth]{include/SVMinput_glucoseBlood.png}
-		\caption{Resultado de aplicar el algoritmo BM25.}
+		\caption{Búsqueda "glucose in blood" con el formato necesario para aplicar SVM rank.}
 	\end{figure}
 	
-	De esta manera, se pudo generar un dataset con las tripletas habituales para este tipo de datos. Esta información se guardó en un segundo fichero, separando el dataset en datos de entrenamiento (\texttt{train.dat}) y datos de evaluación (\texttt{test.dat}).
+	De esta manera, se pudo generar un dataset con las tripletas habituales para este tipo de datos. Esta información se guardó en un segundo fichero, separando el dataset en datos de entrenamiento (\texttt{result/train.dat}) y datos de evaluación (\texttt{result/test.dat}).
 	
 	Debido a la cantidad de datos con los que se trabaja, los dataset generados son significativamente pequeños, por lo que este proyecto se debe tomar como una prueba de concepto, y no una evaluación completa del algoritmo.
 	
 	\subsection{Implementación}
 	
-	La implementación realizada se puede observar en la carpeta adjunta \texttt{code}, que contiene los ficheros de código necesarios, así como los ficheros de entrada del algoritmo en la carpeta \texttt{code/loinc\_dataset} y los resultados de la ejecución en la carpeta \texttt{code/result}.
+	La implementación realizada se puede observar en la carpeta adjunta \texttt{code}, que contiene los ficheros de código necesarios, así como los ficheros de entrada del algoritmo en la carpeta \texttt{code/input} y los resultados de la ejecución en la carpeta \texttt{code/result}.
 	
-	Para la implementación, la información se separó en dos dataset. El dataset \textit{train}, que contiene las primeras 50 filas, se utilizó para entrenar el algoritmo, mientras que el conjunto \textit{test} se utilizó para mejorar la búsqueda y así poder evaluar el algoritmo.
-	
-	La implementación realizada sigue el siguiente esquema
+	La implementación realizada sigue el siguiente esquema:
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.6\textwidth]{include/esquema_implementacion.png}
+		\includegraphics[width=\textwidth]{include/esquema_implementacion.png}
 		\caption{Esquema de la implementación}
 	\end{figure}
 	
-	Veamos como se aplica esta implementación a la query \textit{"glucose in blood"}, glucosa en sangre, sobre el dataset proporcionado. 
+	Una vez generados los ficheros \texttt{train.dat} y \texttt{test.dat} como se indica en el apartado anterior, generamos el modelo de SVMrank y realizamos la búsqueda de cada una de las consultas sobre el modelo. 
 	
-	En primer lugar, 
+	Como implementación del SVMrank hemos utilizado la indicada en el artículo \cite{articulo-clase}, cuyos ficheros se encuentran en la carpeta \texttt{code/aux\_files}.
+	
+	Este algoritmo devuelve el fichero \texttt{result/prediction\_order.txt}, que indica una puntuación para cada entrada del dataset en el orden en el que se encuentran en el fichero \texttt{test.dat}, por lo que es necesario reidentificar la entrada a la que se refieren. Para esta reidentificación utilizamos el score obtenido con el BM25 para el campo \textit{long\_common\_name}, ya que este campo es único para cada código de LOINC.
 
-	
-
-	A continuación, utilizando la transformada pairwise y el modelo SVC linear, convertimos nuestro problema de búsqueda en un problema de clasificación bidimensional, teniendo en cuenta los clicks de los usuarios y el resultado de la búsqueda anterior. 
-	
-	Por último, ordenamos los resultados del dataset \texttt{test}, y generamos unas gráficas que nos permitan visualizar los resultados.
-	
 	\subsection{Testeo y resultados}
 	
 	

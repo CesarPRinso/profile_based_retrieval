@@ -10,8 +10,8 @@ def get_svm_format(x, qid):
     """
     
     clicks = data['sum_clicks'][x]
-    if clicks == 0:
-        return ""
+    #if clicks == 0:
+    #    return ""
     long_common_name = data['long_common_name'][x]
     component = data['component'][x]
     system = data['system'][x]
@@ -37,22 +37,26 @@ for qid in range(len(query_list)):
 
     # run data through BM25
     data = build_learning_data_from(data, query)
+    #print("[",query,"] BM25 rank:\n",data)
 
     # generate learning data in correct format for SVMrank 
     data['svm_format'] = data['index'].apply(lambda x: get_svm_format(x-1, qid))
+    # drop duplicate rows using svm_format as primary key
+    data = data.drop_duplicates(subset=['svm_format'])
     
-    # separate into training and testing and save dat files
+    cut_train = int(data.shape[0]*0.8)
+    # separate into training(80%) and testing(20%) and save dat files
     train_dat = ""
-    train = data.copy().iloc[:50, :]
-    for i in range(train.shape[0]):
+    train = data.copy().iloc[:cut_train, :]
+    for i in train.index.values.tolist():
         train_dat += train['svm_format'][i]
     with open("result/train.dat", "a") as f:
         f.writelines(train_dat)
     
     test_dat = ""
-    test = data.copy().iloc[50:, :]
-    for i in range(test.shape[0]):
-        test_dat += test['svm_format'][50+i]
+    test = data.copy().iloc[cut_train:, :]
+    for i in test.index.values.tolist():
+        test_dat += test['svm_format'][i]
     with open("result/test.dat", "a") as f:
         f.writelines(test_dat)
     test.to_csv(f"result/data_test_q{qid}.csv")
@@ -100,7 +104,8 @@ for [qid, lcn_index, result] in all_together:
 
     data_original = pd.read_csv(f"input/{query_list[int(qid)]}.csv")
         
-    human_results += "query \"" + query_list[int(qid)].replace("_"," ") + "\": " + data_original['loinc_num'][index] + "\t" + data_original['long_common_name'][index] + "\t" + data_original['component'][index] + "\t" + data_original['system'][index] + "\t" + data_original['property'][index] + "\n"
+    human_results += "query \"" + query_list[int(qid)].replace("_"," ") + "\": "+ data_original['loinc_num'][index] + "\t" + data_original['long_common_name'][index] + "\t" + data_original['component'][index] + "\t" + data_original['system'][index] + "\t" + data_original['property'][index] + "\n"
+
 # save human readable prediction results
 with open("result/human_readable_prediction_order.txt", "w") as f:
         f.writelines(human_results)

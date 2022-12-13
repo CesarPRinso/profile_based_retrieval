@@ -1,2 +1,16 @@
+query "white blood cells count": 1798-8	Amylase [Enzymatic activity/volume] in Serum or Plasma	Amylase	Ser/Plas	CCnc
+query "bilirubin in plasma": 14764-5	Glucose [Moles/volume] in Serum or Plasma --3 hours post 100 g glucose PO	Glucose^3H post 100 g glucose PO	Ser/Plas	SCnc
+query "bilirubin in plasma": 15076-3	Glucose [Moles/volume] in Urine	Glucose	Urine	SCnc
+query "bilirubin in plasma": 19080-1	Choriogonadotropin [Units/volume] in Serum or Plasma	Choriogonadotropin	Ser/Plas	ACnc
+query "bilirubin in plasma": 925-8	Blood product disposition [Type]	Blood product disposition	^BPU	Type
+query "bilirubin in plasma": 20629-2	Levofloxacin [Susceptibility]	Levofloxacin	Isolate	Susc
+query "white blood cells count": 1959-6	Bicarbonate [Moles/volume] in Blood	Bicarbonate	Bld	SCnc
+query "white blood cells count": 1959-6	Bicarbonate [Moles/volume] in Blood	Bicarbonate	Bld	SCnc
 query "glucose in blood": 933-2	Blood product type	Blood product type	^BPU	Type
+query "glucose in blood": 19000-9	Vancomycin [Susceptibility]	Vancomycin	Isolate	Susc
+query "glucose in blood": 26478-8	Lymphocytes/100 leukocytes in Blood	Lymphocytes/100 leukocytes	Bld	NFr
+query "glucose in blood": 19080-1	Choriogonadotropin [Units/volume] in Serum or Plasma	Choriogonadotropin	Ser/Plas	ACnc
+query "glucose in blood": 1995-0	Calcium.ionized [Moles/volume] in Serum or Plasma	Calcium.ionized	Ser/Plas	SCnc
+query "bilirubin in plasma": 2111-3	Choriogonadotropin.beta subunit [Moles/volume] in Serum or Plasma	Choriogonadotropin.beta subunit	Ser/Plas	SCnc
+query "glucose in blood": 35184-1	Fasting glucose [Mass or Moles/volume] in Serum or Plasma	Glucose^post CFst	Ser/Plas	MSCnc
 query "glucose in blood": 35184-1	Fasting glucose [Mass or Moles/volume] in Serum or Plasma	Glucose^post CFst	Ser/Plas	MSCnc

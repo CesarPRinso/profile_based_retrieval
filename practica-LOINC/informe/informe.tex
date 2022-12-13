@@ -26,11 +26,11 @@
 
 	
 	\section{Introducción}
-	Tradicionalmente, algoritmos como el TF-IDF o el BM25 usados para realizar motores de búsqueda clasifican los resultados obtenidos para cada consulta en "relevantes" e "irrelevantes". Esta clasificación no caracteriza de manera completamente correcta las opiniones de los usuarios, ya que hay resultados más relevantes que otros, de manera que se puede establecer un orden prácticamente total de la relevancia óptima de los resultados.
+	Tradicionalmente, algoritmos como el TF-IDF usados para realizar motores de búsqueda clasifican los resultados obtenidos para cada consulta en "relevantes" e "irrelevantes". Esta clasificación no caracteriza de manera completamente correcta las opiniones de los usuarios, ya que hay resultados más relevantes que otros, de manera que se puede establecer un orden prácticamente total de la relevancia óptima de los resultados.
 	
 	Obtener este ranking sin tener un feedback explícito no es trivial, y conseguir estos comentarios por parte de los usuarios es difícil. El conocimiento sobre a qué entradas de la búsqueda acceden los usuarios nos puede proporcionar información equivalente, de manera mucho menos costosa. El principal inconveniente de utilizar el conocido como "clickthrough data", datos sobre los clicks de los usuarios, es la cantidad de ruido presente en los datos y la dependencia que existe entre los clicks de los usuarios y el orden de los documentos recibidos.
 	
-	Sin duda este tipo de datos son útiles y poco costosos de conseguir, pero su calidad no se puede comparar con aquella de los juicios de relevancia generados por expertos del dominio.\\
+	Sin duda este tipo de datos son útiles y poco costosos de conseguir, pero su calidad no se puede comparar con la de juicios de relevancia generados por expertos del dominio.\\
 	
 	En este trabajo, se nos pide implementar los algoritmos descritos en el artículo \cite{articulo-clase} sobre un set de tres búsquedas sobre la terminología LOINC.
 	
@@ -39,27 +39,46 @@
 	\section{Desarrollo del buscador}
 	Utilizando el lenguaje python, se ha adaptado el dataset proporcionado a las necesidades del proyecto, y se ha preparado una implementación de un buscador basado en el algoritmo BM25, optimizado mediante los clicks de los usuarios.
 	
-	\subsection{Procesado de datos}
+	\subsection{Procesado de datos y aplicación del BM25}
 	
 	En el dataset se proporcionaron tres búsquedas sobre LOINC, de las cuales cada consulta tenía una lista de posibles respuestas.
-	Para cada una de las consultas se obtuvo un dataset como el de la Figura 1.
+	Para cada una de las consultas se obtuvo un dataset similar al de la Figura 1.
 	%, donde cada una de las columnas contiene información importante sobre cada una de las posibles salidas de la búsqueda.
 	
 	 \begin{figure}[H]
 	 	\centering
 	 	\includegraphics[width=\textwidth]{include/query_example_orig.png}
-	 	\caption{Ejemplo del dataset recibido para la consulta "GLUCOSE IN BLOOD"}
+	 	\caption{Ejemplo del dataset recibido para la consulta "glucose in blood"}
 	 \end{figure}
- 
-	Los autores de este trabajo seleccionaron, actuando como usuarios, a cuáles de los códigos harían click según la descripción textual de la búsqueda. De esta manera, se pudo generar un dataset con las tripletas habituales para este tipo de datos. Esta información se guardó en un segundo dataset, representando la consulta, el orden de respuestas presentadas y aquellas respuestas a las que se les hizo click, indicando el número de veces.
 	
-	Como se indica en el articulo \cite{articulo-clase}, la información relativa al clickthrough data se codifica como tripletas, donde cada búsqueda (query) se relaciona con los resultados obtenidos en un orden, y el número de clicks realizados sobre cada uno de ellos.\\
-	
-	El procesado de los datos de este problema se ve afectado por dos importantes decisiones de diseño: la elección del algoritmo de búsqueda y los campos utilizados para realizar la búsqueda.
-
+	El procesado de los datos de este problema se ve afectado por dos importantes decisiones de diseño: la elección del algoritmo de búsqueda, y los campos utilizados para realizar la búsqueda. 	
 	Como algoritmo de búsqueda se utilizó el algoritmo BM25Okapi, por ser uno de los algoritmos base más robustos habitualmente utilizado en este campo. Para la implementación de la búsqueda se utilizó la librería \texttt{rank\_bm25} y su implementación del algoritmo.
-	
 	En segundo lugar, se decidió utilizar los campos \textit{long common name}, \textit{component} y \textit{system} como la base de este motor de búsqueda, ya que proporcionan información suficiente para poder realizar la búsqueda, y así eliminar la necesidad del campo \textit{component}, cuya información no se podía utilizar con las consultas propuestas.
+	
+	Los autores de este trabajo seleccionaron, actuando como usuarios, a cuáles de los códigos harían click según la descripción textual de la búsqueda. A partir de esta información sobre los clicks, se puede proceder a la aplicación del algoritmo BM25 sobre cada consulta, obteniendo una estructura de datos que representa la importancia relativa de cada uno de los atributos del código de LOINC respecto a la query.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{include/bm25rank_glucoseBlood.png}
+		\caption{Resultado de aplicar el algoritmo BM25.}
+	\end{figure}
+	
+	Cabe destacar que con el algoritmo BM25, la importancia de los contenidos del system se marca como $0$ en todos los casos. Esto se debe a que este campo contiene abreviaturas, representando por ejemplo la palabra \textit{blood} como \textit{Bld}, por lo que una búsqueda por palabra exacta no obtiene ningún resultado.\\
+	
+	Como se indica en el articulo \cite{articulo-clase}, la información relativa al clickthrough data se codifica como tripletas, donde cada búsqueda (query) se relaciona con los resultados obtenidos con el algoritmo de búsqueda, y el número de clicks realizados sobre cada uno de ellos.
+	
+	
+	El dataset apropiado para aplicar el algoritmo SVM rank, tiene un formato específico. En este caso, la consulta "glucose in blood" se representa como se indica en la figura 3, donde el primer campo indica el número de clicks del link, el segundo campo contiene un identificador de la consulta y los otros tres campos contienen el resultado del BM25 para cada uno de los campos estudiados.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{include/SVMinput_glucoseBlood.png}
+		\caption{Resultado de aplicar el algoritmo BM25.}
+	\end{figure}
+	
+	De esta manera, se pudo generar un dataset con las tripletas habituales para este tipo de datos. Esta información se guardó en un segundo fichero, separando el dataset en datos de entrenamiento (\texttt{train.dat}) y datos de evaluación (\texttt{test.dat}).
+	
+	Debido a la cantidad de datos con los que se trabaja, los dataset generados son significativamente pequeños, por lo que este proyecto se debe tomar como una prueba de concepto, y no una evaluación completa del algoritmo.
 	
 	\subsection{Implementación}
 	
@@ -77,15 +96,9 @@
 	
 	Veamos como se aplica esta implementación a la query \textit{"glucose in blood"}, glucosa en sangre, sobre el dataset proporcionado. 
 	
-	En primer lugar, se aplica el algoritmo BM25 sobre la query a procesar, obteniendo una estructura de datos que representa la importancia relativa de cada uno de los atributos del código de LOINC respecto de la query.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.6\textwidth]{include/bm25rank_glucoseBlood.png}
-		\caption{Resultado de aplicar el algoritmo BM25.}
-	\end{figure}
+	En primer lugar, 
 
-	Cabe destacar que con el algoritmo BM25, la importancia de los contenidos del system se marca como 0 en todos los casos. Esto se debe a que este campo contiene abreviaturas, representando la palabra \textit{blood} como \textit{Bld}, por lo que una búsqueda por palabra exacta no obtiene ningún resultado.
+	
 
 	A continuación, utilizando la transformada pairwise y el modelo SVC linear, convertimos nuestro problema de búsqueda en un problema de clasificación bidimensional, teniendo en cuenta los clicks de los usuarios y el resultado de la búsqueda anterior. 
 	

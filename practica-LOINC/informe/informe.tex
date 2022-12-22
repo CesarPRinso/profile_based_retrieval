@@ -99,18 +99,14 @@
 	Este algoritmo devuelve el fichero \texttt{result/prediction\_order.txt}, que indica una puntuación para cada entrada del dataset en el orden en el que se encuentran en el fichero \texttt{test.dat}, por lo que es necesario reidentificar la entrada a la que se refieren. Para esta reidentificación utilizamos el score obtenido con el BM25 para el campo \textit{long\_common\_name}, ya que este campo es único para cada código de LOINC.
 	
 	\section{Conclusiones}
-	En presente trabajo realizamos la implementación del algoritmo SVM light para poder realizar relevancia de los resultados de query con mayor importancia dependiendo de los clicks otorgados por el usuarios,
-	debido a que por un lado, no siempre los resultados de la búsqueda por un determinado query son los más importante por el usuario, no selecciona los primeros, sino el más acorde a lo que el nombre le motiva a ingresar
-	y segundo, mientras más atrás sea el resultad, menos oportunidad de otorgarle un click se tendrá, así sea el artículo o resultado muy importate o relevante para ello.
-	En este trabajo, implementamos para un inicio el algoritmo BM25 para calcular los features, y tener el promedio con mayor relevancia relacionado al query de ingreso. Pero notamos que no todos las columnas que seleccionamos como relevantes par
-	nostros para ranking estaban listas para poder ser procesadas. Por ello como un trabajo futuro proponemos el procesado de abreaviaturas en la columna System, para que así se pueda calcular y mejorar las características con BM25.
-	Otro trabajo Futuro que vemos podría ser de mucha ayuda es la implementación de clustering conforme a los queries de entradas para poder claisifcar en el espacio de vector machine.
+	
+	En este trabajo se ha implementado un buscador de la terminología LOINC de laboratorio basado en el algoritmo SVMrank, utilizando como fuente de información los resultados de la búsqueda con el algoritmo BM25 y clicks de los posibles usuarios.
+	
+	Pese a ser un ejemplo funcional de la implementación, no se pueden obtener conclusiones relevantes respecto a la calidad del algoritmo. El dataset utilizado para realizar el entrenamiento y la búsqueda no contiene cantidad suficiente de información como para conseguir métricas de este tipo.
 
-	
-	
-	
-	
-	
+	En este trabajo se puede ver el interesante potencial de los metadatos de las búsquedas como sustituto de un ranking de experto, así como los problemas del clickthrough data.
+
+	La implementación propuesta se podría mejorar en un futuro, modificando ligeramente la entrada del algoritmo BM25, sustituyendo las siglas por su significado, o incorporando un conjunto de "palabras equivalentes" a este set de resultados.
 
 	%\section*{Bibliografía}
 	%\addcontentsline{toc}{section}{Bibliografía}
